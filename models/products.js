@@ -33,8 +33,20 @@ return created;
  return foundP;
  };
 
+ const update = async (name, quantity, id) => {
+   const foundP = await getById(id);
+   if (!foundP) {
+     return foundP;
+  }
+  const [updateP] = await connection.execute(`
+  UPDATE StoreManager.products SET name = ?, quantity = ? WHERE id = ?;`, [name, quantity, id]);
+  return updateP;
+ };
+
 module.exports = {
   getAll,
   getById,
+  getByName,
   create,
+  update,
 };

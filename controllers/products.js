@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { getAll, getById, create } = require('../models/products');
+const { getAll, getById, getByName, create, update } = require('../models/products');
 const { nameValidation, quantityValidation } = require('../middlewares/productValidation');
 
 const router = express.Router();
@@ -39,9 +39,15 @@ router.post('/', nameValidation, quantityValidation, async (req, res, next) => {
     next(err);
   }
 });
-router.put('/', nameValidation, quantityValidation, (req, res, next) => {
+router.put('/:id', nameValidation, quantityValidation, async (req, res, next) => {
   try {
-    return res.status(200).send({ message: 'att' });
+    const { id } = req.params;
+    const { name, quantity } = req.body;
+    const updated = await update(name, quantity, id);
+    if (!updated) {
+      return res.status(404).send({ message: 'Product not found' });
+    }
+    return res.status(200).json(await getByName(name));
   } catch (err) {
     next(err);
   }
