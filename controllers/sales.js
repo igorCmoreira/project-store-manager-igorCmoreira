@@ -1,6 +1,7 @@
 const express = require('express');
 
 const { getAll, getById } = require('../models/sales');
+const { idValidation, quantityValidation } = require('../middlewares/saleValidation');
 
 const router = express.Router();
 
@@ -25,4 +26,20 @@ router.get('/:id', async (req, res, next) => {
     next(err);
   }
 });
+
+router.post('/', idValidation, quantityValidation, (req, res, next) => {
+  try {
+    return res.status(200).send({ message: 'created' });
+  } catch (err) {
+    next(err);
+  }
+});
+router.put('/', idValidation, quantityValidation, (req, res, next) => {
+  try {
+    return res.status(200).send({ message: 'att' });
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;

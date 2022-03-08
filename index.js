@@ -7,6 +7,8 @@ const error = require('./middlewares/error');
 
 require('dotenv').config();
 
+app.use(express.json());
+
 app.use('/products', products);
 app.use('/sales', sales);
 
