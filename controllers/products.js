@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { getAll, getById } = require('../models/products');
+const { getAll, getById, create } = require('../models/products');
 const { nameValidation, quantityValidation } = require('../middlewares/productValidation');
 
 const router = express.Router();
@@ -27,9 +27,14 @@ router.get('/:id', async (req, res, next) => {
   }
 });
 
-router.post('/', nameValidation, quantityValidation, (req, res, next) => {
+router.post('/', nameValidation, quantityValidation, async (req, res, next) => {
   try {
-    return res.status(200).send({ message: 'created' });
+    const { name, quantity } = req.body;
+    const created = await create(name, quantity);
+    if (!created.insertId) {
+      return res.status(409).send({ message: 'Product already exists' });
+    }
+    return res.status(201).json(await getById(created.insertId));
   } catch (err) {
     next(err);
   }
