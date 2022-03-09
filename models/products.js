@@ -43,10 +43,17 @@ return created;
   return updateP;
  };
 
+ const del = async (id) => {
+   const [deleted] = await connection.execute(`DELETE FROM StoreManager.products
+   WHERE id  = ?;`, [id]);
+   return deleted;
+ };
+
 module.exports = {
   getAll,
   getById,
   getByName,
   create,
   update,
+  del,
 };

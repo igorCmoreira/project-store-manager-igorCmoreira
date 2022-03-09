@@ -1,26 +1,32 @@
+const { verifyName, verifyQuantity, verifyExistence } = require('../services/productVerify');
+
 const nameValidation = (req, res, next) => {
   const { name } = req.body;
-  if (!name) {
-    return res.status(400).send({ message: '"name" is required' });
+  if (!verifyName(name)) {
+    next();
   }
-  if (name.length <= 5) {
-    return res.status(422).send({ message: '"name" length must be at least 5 characters long' });
-  }
-  next();
+  const { code, message } = verifyName(name);
+  return res.status(code).send({ message });
 };
 
 const quantityValidation = (req, res, next) => {
   const { quantity } = req.body;
-
-  if (!quantity) {
-    return res.status(400).send({ message: '"quantity" is required' });
+  if (!verifyQuantity(quantity)) {
+    next();
   }
-  if (quantity < 1) {
-    return res.status(422).send({ message: '"quantity" must be greater than or equal to 1' });
+  const { code, message } = verifyQuantity(quantity);
+  return res.status(code).send({ message });
+};
+const deleteValidation = async (req, res, next) => {
+  const { id } = req.params;
+  if (await verifyExistence(id)) {
+    const { code, message } = await verifyExistence(id);
+    return res.status(code).send({ message });
   }
   next();
 };
 module.exports = {
   nameValidation,
   quantityValidation,
+  deleteValidation,
 };

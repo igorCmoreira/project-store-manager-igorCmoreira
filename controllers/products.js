@@ -1,7 +1,9 @@
 const express = require('express');
 
-const { getAll, getById, getByName, create, update } = require('../models/products');
-const { nameValidation, quantityValidation } = require('../middlewares/productValidation');
+const { getAll, getById, getByName, create, update, del } = require('../models/products');
+const { nameValidation,
+   quantityValidation,
+   deleteValidation } = require('../middlewares/productValidation');
 
 const router = express.Router();
 
@@ -48,6 +50,19 @@ router.put('/:id', nameValidation, quantityValidation, async (req, res, next) =>
       return res.status(404).send({ message: 'Product not found' });
     }
     return res.status(200).json(await getByName(name));
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.delete('/:id', deleteValidation, async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const deleted = await del(id);
+    if (!deleted) {
+      return res.status(501).end();
+    }
+    return res.status(204).end();
   } catch (err) {
     next(err);
   }
