@@ -1,3 +1,4 @@
+const { update } = require('../models/sales');
 const { createSaleProduct, createSale } = require('../models/sales');
 
 const formulate = async (sales) => {
@@ -19,4 +20,19 @@ const formulate = async (sales) => {
     }
     return results;
   };
-module.exports = { formulate };
+
+const formulateUpdate = async (updates, id) => {
+  const { productId, quantity } = updates; 
+  const data = { productId, quantity };
+  let results = {};
+  const updated = await update(productId, quantity, id);
+  if (updated) {
+    results = {
+      saleId: id,
+      itemUpdated: [data],
+    };
+  }
+  return results;
+};
+
+module.exports = { formulate, formulateUpdate };

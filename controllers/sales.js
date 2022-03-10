@@ -2,7 +2,7 @@ const express = require('express');
 
 const { getAll, getById } = require('../models/sales');
 const { idValidation, quantityValidation } = require('../middlewares/saleValidation');
-const { formulate } = require('../services/salePosition');
+const { formulate, formulateUpdate } = require('../services/saleFormulate');
 
 const router = express.Router();
 
@@ -40,9 +40,12 @@ router.post('/', idValidation, quantityValidation, async (req, res, next) => {
     next(err);
   }
 });
-router.put('/', idValidation, quantityValidation, (req, res, next) => {
+router.put('/:id', idValidation, quantityValidation, async (req, res, next) => {
   try {
-    return res.status(200).send({ message: 'att' });
+    const [updates] = req.body;
+    const { id } = req.params;
+   const updated = await formulateUpdate(updates, id);
+   return res.status(200).json(updated);
   } catch (err) {
     next(err);
   }
