@@ -40,7 +40,7 @@ const createSale = async () => {
     (NOW());
   `);
   return sale.insertId;
-}
+};
 
 const createSaleProduct = async (saleId, productId, quantity) => {
   const [createdSale] = await connection.execute(`
