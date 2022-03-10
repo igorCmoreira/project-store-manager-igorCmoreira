@@ -2,6 +2,7 @@ const express = require('express');
 
 const { getAll, getById } = require('../models/sales');
 const { idValidation, quantityValidation } = require('../middlewares/saleValidation');
+const { formulate } = require('../services/salePosition');
 
 const router = express.Router();
 
@@ -27,9 +28,14 @@ router.get('/:id', async (req, res, next) => {
   }
 });
 
-router.post('/', idValidation, quantityValidation, (req, res, next) => {
+router.post('/', idValidation, quantityValidation, async (req, res, next) => {
   try {
-    return res.status(200).send({ message: 'created' });
+    const sales = req.body;
+    const saleCreated = await formulate(sales);
+    if (saleCreated) {
+      return res.status(201).json(saleCreated);
+    }
+    return res.status(501).end();
   } catch (err) {
     next(err);
   }

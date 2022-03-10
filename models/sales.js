@@ -33,7 +33,26 @@ const foundSale = foundDataSale.map((s) => ({
 }));
 return foundSale;
 };
+
+const createSale = async () => {
+  const [sale] = await connection.execute(`
+  INSERT INTO StoreManager.sales (date) VALUES
+    (NOW());
+  `);
+  return sale.insertId;
+}
+
+const createSaleProduct = async (saleId, productId, quantity) => {
+  const [createdSale] = await connection.execute(`
+  INSERT INTO StoreManager.sales_products (sale_id, product_id, quantity) VALUES
+  (?, ?, ?);
+  `, [saleId, productId, quantity]);
+  return createdSale;
+};
+
 module.exports = {
   getAll,
   getById,
+  createSale,
+  createSaleProduct,
 };
