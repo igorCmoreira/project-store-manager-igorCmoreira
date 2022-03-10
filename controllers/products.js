@@ -1,13 +1,6 @@
-const express = require('express');
-
 const { getAll, getById, getByName, create, update, del } = require('../models/products');
-const { nameValidation,
-   quantityValidation,
-   deleteValidation } = require('../middlewares/productValidation');
 
-const router = express.Router();
-
-router.get('/', async (req, res, next) => {
+const list = ('/', async (req, res, next) => {
   try {
     const products = await getAll();
     
@@ -16,7 +9,7 @@ router.get('/', async (req, res, next) => {
     next(err);
   }
 });
-router.get('/:id', async (req, res, next) => {
+const listById = ('/', async (req, res, next) => {
   try {
     const { id } = req.params;
     const foundProduct = await getById(id);
@@ -29,7 +22,7 @@ router.get('/:id', async (req, res, next) => {
   }
 });
 
-router.post('/', nameValidation, quantityValidation, async (req, res, next) => {
+const addToDB = ('/', async (req, res, next) => {
   try {
     const { name, quantity } = req.body;
     const created = await create(name, quantity);
@@ -41,7 +34,7 @@ router.post('/', nameValidation, quantityValidation, async (req, res, next) => {
     next(err);
   }
 });
-router.put('/:id', nameValidation, quantityValidation, async (req, res, next) => {
+const upToDB = ('/', async (req, res, next) => {
   try {
     const { id } = req.params;
     const { name, quantity } = req.body;
@@ -55,7 +48,7 @@ router.put('/:id', nameValidation, quantityValidation, async (req, res, next) =>
   }
 });
 
-router.delete('/:id', deleteValidation, async (req, res, next) => {
+const delToDB = ('/', async (req, res, next) => {
   try {
     const { id } = req.params;
     const deleted = await del(id);
@@ -68,4 +61,10 @@ router.delete('/:id', deleteValidation, async (req, res, next) => {
   }
 });
 
-module.exports = router;
+module.exports = { 
+  list,
+  listById,
+  addToDB,
+  delToDB,
+  upToDB,
+ };
