@@ -25,6 +25,7 @@ return foundProduct[0];
 
 const create = async (name, quantity) => {
  const foundP = await getByName(name);
+ console.log('aqui');
  if (!foundP) {
   const [created] = await connection.execute(`
 INSERT INTO StoreManager.products (name, quantity) VALUES (? , ?)`, [name, quantity]);

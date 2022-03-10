@@ -2,21 +2,24 @@ const { verifyName, verifyQuantity, verifyExistence } = require('../services/pro
 
 const nameValidation = (req, res, next) => {
   const { name } = req.body;
-  if (!verifyName(name)) {
-    next();
+  const valid = verifyName(name);
+  if (valid) {
+    const { code, message } = valid;
+    return res.status(code).send({ message });
   }
-  const { code, message } = verifyName(name);
-  return res.status(code).send({ message });
+  next();
 };
 
 const quantityValidation = (req, res, next) => {
   const { quantity } = req.body;
-  if (!verifyQuantity(quantity)) {
-    next();
+  const valid = verifyQuantity(quantity);
+  if (valid) {
+    const { code, message } = verifyQuantity(quantity);
+    return res.status(code).send({ message });
   }
-  const { code, message } = verifyQuantity(quantity);
-  return res.status(code).send({ message });
+  next();
 };
+
 const deleteValidation = async (req, res, next) => {
   const { id } = req.params;
   if (await verifyExistence(id)) {
