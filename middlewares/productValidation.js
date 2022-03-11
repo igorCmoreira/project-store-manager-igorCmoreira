@@ -10,7 +10,7 @@ const nameValidation = (req, res, next) => {
   next();
 };
 
-const quantityValidation = (req, res, next) => {
+const quantityValidationP = (req, res, next) => {
   const { quantity } = req.body;
   const valid = verifyQuantity(quantity);
   if (valid) {
@@ -30,6 +30,6 @@ const deleteValidation = async (req, res, next) => {
 };
 module.exports = {
   nameValidation,
-  quantityValidation,
+  quantityValidationP,
   deleteValidation,
 };

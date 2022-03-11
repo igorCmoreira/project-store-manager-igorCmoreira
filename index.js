@@ -1,8 +1,9 @@
 const express = require('express');
 
 const { nameValidation,
-  quantityValidation,
+  quantityValidationP,
   deleteValidation } = require('./middlewares/productValidation');
+  const { idValidation, quantityValidation } = require('./middlewares/saleValidation');
 
 const app = express();
 const products = require('./controllers/products');
@@ -15,11 +16,14 @@ app.use(express.json());
 
 app.get('/products/:id', products.listById);
 app.get('/products', products.list);
-app.post('/products', nameValidation, quantityValidation, products.addToDB);
-app.put('/products/:id', nameValidation, quantityValidation, products.upToDB);
+app.post('/products', nameValidation, quantityValidationP, products.addToDB);
+app.put('/products/:id', nameValidation, quantityValidationP, products.upToDB);
 app.delete('/products/:id', deleteValidation, products.delToDB);
 
-app.use('/sales', sales);
+app.get('/sales/:id', sales.listById);
+app.get('/sales', sales.list);
+app.post('/sales', idValidation, quantityValidation, sales.addToDB);
+app.put('/sales/:id', idValidation, quantityValidation, sales.upToDB);
 
 app.use(error);
 

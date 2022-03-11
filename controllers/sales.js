@@ -1,12 +1,7 @@
-const express = require('express');
-
 const { getAll, getById } = require('../models/sales');
-const { idValidation, quantityValidation } = require('../middlewares/saleValidation');
 const { formulate, formulateUpdate } = require('../services/saleFormulate');
 
-const router = express.Router();
-
-router.get('/', async (req, res, next) => {
+const list = ('/', async (req, res, next) => {
   try {
     const sales = await getAll();
     
@@ -15,7 +10,7 @@ router.get('/', async (req, res, next) => {
     next(err);
   }
 });
-router.get('/:id', async (req, res, next) => {
+const listById = ('/', async (req, res, next) => {
   try {
     const { id } = req.params;
     const foundSale = await getById(id);
@@ -28,7 +23,7 @@ router.get('/:id', async (req, res, next) => {
   }
 });
 
-router.post('/', idValidation, quantityValidation, async (req, res, next) => {
+const addToDB = ('/', async (req, res, next) => {
   try {
     const sales = req.body;
     const saleCreated = await formulate(sales);
@@ -40,7 +35,7 @@ router.post('/', idValidation, quantityValidation, async (req, res, next) => {
     next(err);
   }
 });
-router.put('/:id', idValidation, quantityValidation, async (req, res, next) => {
+const upToDB = ('/', async (req, res, next) => {
   try {
     const [updates] = req.body;
     const { id } = req.params;
@@ -51,4 +46,9 @@ router.put('/:id', idValidation, quantityValidation, async (req, res, next) => {
   }
 });
 
-module.exports = router;
+module.exports = {
+  list,
+  listById,
+  addToDB,
+  upToDB,
+};

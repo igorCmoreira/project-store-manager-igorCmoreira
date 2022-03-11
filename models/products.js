@@ -38,7 +38,7 @@ return created;
    const foundP = await getById(id);
    if (!foundP) {
      return foundP;
-  }
+    }
   const [updateP] = await connection.execute(`
   UPDATE StoreManager.products SET name = ?, quantity = ? WHERE id = ?;`, [name, quantity, id]);
   return updateP;
